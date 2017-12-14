@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="AnalyticsApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="AnalyticsApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="AnalyticsApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="AnalyticsApp" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Log Analytics Tool</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css">
+
+  <link rel="stylesheet" href="app.css">
+  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>ING Log Analytics Tool</h1>
+  </header>
+
+  <main ng-controller="ChartCtrl">
+    <nav>
+      <h3>Change Data</h3>
+      <form action="#">
+        <select name="requestType" id="requestType">
+          <option value="all">All</option>
+          <option value="all">All</option>
+          <option value="all">All</option>
+        </select>
+        <input type="text" name="dateFld"/>
+
+        <button>Update Chart</button>
+      </form>
+    </nav>
+    <div class="content-body">
+      <div id="chart-wrap">
+        <nvd3 options="options" data="data"></nvd3>
+      </div>
+    </div>
+  </main>
+  
+  <script src="bower_components/angular/angular.js"></script>
+
+  <script src="bower_components/d3/d3.min.js"></script>
+  <script src="bower_components/nvd3/build/nv.d3.js"></script>
+  <script src="bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
+
+  <script src="app.js"></script>
+  <script src="components/ChartCtrl.js"></script>
+</body>
+</html>
