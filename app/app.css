@@ -19,6 +19,15 @@ nav, .content-body {
 	position: absolute;
 }
 
+nav select, nav input, nav label, nav button {
+	margin:10px;
+	display: block;
+}
+nav label {
+	font-weight: bold;
+	
+}
+
 nav {
     top: 0px;
     bottom: 0;
@@ -34,7 +43,7 @@ nav {
 	left:250px;
 	width: calc(100% - 250px);
 	height: calc(100vh - 65px);
-	overflow: scroll;
+	overflow: auto;
 }
 
 header h1 {

@@ -23,17 +23,22 @@
 
   <main ng-controller="ChartCtrl">
     <nav>
-      <h3>Change Data</h3>
-      <form action="#">
-        <select name="requestType" id="requestType">
-          <option value="all">All</option>
-          <option value="all">All</option>
-          <option value="all">All</option>
-        </select>
-        <input type="text" name="dateFld"/>
+      <h3>Filter Data to Draw Chart</h3>
 
-        <button>Update Chart</button>
-      </form>
+      <label for="repeatSelect">
+        Request Type
+      </label>
+        <select name="repeatSelect" id="repeatSelect" ng-model="requestOptionSelected">
+          <option ng-repeat="option in requestOptions" value="{{option.id}}">{{option.name}}</option>
+        </select>
+        
+        <label>
+          Date
+        </label>
+        <input type="date" name="dateFld" ng-model="logDate"/>
+        
+
+        <button ng-click="getData()">Update Chart</button>
     </nav>
     <div class="content-body">
       <div id="chart-wrap">
@@ -49,6 +54,7 @@
   <script src="bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
 
   <script src="app.js"></script>
+  <script src="components/dataService.js"></script>
   <script src="components/ChartCtrl.js"></script>
 </body>
 </html>

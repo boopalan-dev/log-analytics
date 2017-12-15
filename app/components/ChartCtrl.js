@@ -2,7 +2,7 @@
 
 angular.module('AnalyticsApp')
 
-.controller('ChartCtrl', function($scope){
+.controller('ChartCtrl', function($scope, ChartDataService){
         $scope.options = {
             chart: {
                 type: 'linePlusBarChart',
@@ -27,14 +27,14 @@ angular.module('AnalyticsApp')
                         }
                         return null;
                     }
-                }/*,
+                },
                 x2Axis: {
                     tickFormat: function(d) {
                         var dx = $scope.data[0].values[d] && $scope.data[0].values[d].x || 0;
                         return d3.time.format('%b-%Y')(new Date(dx))
                     },
                     showMaxMin: false
-                }*/,
+                },
                 y1Axis: {
                     axisLabel: 'Number of Request',
                     tickFormat: function(d){
@@ -52,18 +52,104 @@ angular.module('AnalyticsApp')
             }
         };
 
-        $scope.data = [
-            {
-                "key" : "Quantity" ,
-                "bar": true,
-                "values" : [[0,955],[1,434],[2,254],[3,270],[4,344],[5,793],[6,2135],[7,4184],[8,6656],[9,8815],[10,8763],[11,8779],[12,8944],[13,7992],[14,7604],[15,7210],[16,7494],[17,7640],[18,6936],[19,6306],[20,6009],[21,4985],[22,4062],[23,2205]]
-            },
-            {
-                "key" : "Price" ,
-                "values" : [[0,0.09],[1,0.11],[2,0.34],[3,0.15],[4,0.09],[5,0.10],[6,0.14],[7,0.16],[8,0.14],[9,0.13],[10,0.11],[11,0.09],[12,0.08],[13,0.08],[14,0.11],[15,0.12],[16,0.10],[17,0.08],[18,0.07],[19,0.07],[20,0.07],[21,0.07],[22,0.16],[23,0.20]]
+        $scope.requestOptions = [{id: '1', name: 'All'}, {id: '2', name: 'SpocPortValuation'}, {id: '3', name: 'SpocPortView'}];
+        $scope.requestOptionSelected = '1';
+        $scope.logDate = "";
+
+        function getAxisdata(d){
+
+           var barData = [];
+            var lineData = [];
+
+            for(var i=0; i<d.length; i++) {
+                barData.push({
+                    x:parseFloat(d[i]["hourId"]),
+                    y:parseFloat(d[i]["count"])
+                })
+
+                 lineData.push({
+                    x:parseFloat(d[i]["hourId"]),
+                    y:parseFloat(d[i]["average"])
+                })
+
             }
-        ].map(function(series) {
-                series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });
-                return series;
+
+            return {
+                bar:barData,
+                line:lineData
+            }
+        }
+
+        function populateChart(ctData){
+
+            $scope.data = [
+                    {
+                        "key" : "Count" ,
+                        "bar": true,
+                        "values" : ctData.bar
+                    },
+                    {
+                        "key" : "Average Time" ,
+                        "values" : ctData.line
+                    }
+                ];
+        }
+
+        function getAverageOfRequest(d1, d2) {
+
+            var barData = [];
+            var lineData = [];
+
+            for(var i=0; i<d1.length; i++) {
+
+                var count = (parseFloat(d1[i]['count']) + parseFloat(d2[i]['count']));
+                var average = (parseFloat(d1[i]['average']) + parseFloat(d2[i]['average']));
+
+                 barData.push({
+                    x:parseFloat(d1[i]['hourId']),
+                    y:count
+                })
+
+                 lineData.push({
+                    x:parseFloat(d1[i]['hourId']),
+                    y:average
+                })
+            }
+
+            return {
+                bar:barData,
+                line:lineData
+            }
+
+        }
+
+
+        function transforData(portValueData, portViewData){
+            if($scope.requestOptionSelected == '2') {
+                var d = getAxisdata(portValueData.analyticsData);
+                populateChart(d);
+            } else if($scope.requestOptionSelected == '3') {
+                var c = getAxisdata(portViewData.analyticsData);
+                populateChart(c);
+            } else {
+                var b = getAverageOfRequest(portValueData.analyticsData, portViewData.analyticsData)
+                    populateChart(b);
+            }           
+
+        }
+
+         $scope.getData = function(){
+            var date = $scope.logDate;
+
+            ChartDataService.getSpocPortValuation(date).then(function(data1){
+                ChartDataService.getSpocPortView(date).then(function(data2){
+                    console.log(data1);
+                    console.log(data2);
+                    transforData(data1, data2);
+                });
+
+            },function(){
+                console.log(error);
             });
-    })
+        }
+    });
